@@ -1,7 +1,7 @@
 name: kitsune_byte
-description: Kitsune Byte - Mobile dev platform
+description: Kitsuné Byte - Sovereign Mobile Dev Platform
 publish_to: 'none'
-version: 3.0.0+1
+version: 4.0.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -10,13 +10,34 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
+  
+  # Core
   http: ^1.2.0
-  speech_to_text: ^6.6.0
   sqflite: ^2.3.0
   path: ^1.9.0
   path_provider: ^2.1.2
-    uuid: ^4.2.0
+  uuid: ^4.2.0
+  
+  # AI & Voice
+  speech_to_text: ^6.6.0
+  flutter_tts: ^4.0.0  # Text to speech for fox voice
+  
+  # UI/Animations
+  flutter_animate: ^4.5.0
+  glassmorphism: ^1.0.0  # Or implement manually with your theme
+  
+  # Terminal (key for Pillar 1)
+  # flutter_pty or xterm + web_socket_channel (we'll add later)
 
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/fox/  # We'll add mascot images later
 
 flutter:
   uses-material-design: true
