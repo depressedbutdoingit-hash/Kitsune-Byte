@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
 
 class OneClickDeploy {
   static final OneClickDeploy instance = OneClickDeploy._init();
@@ -45,46 +44,6 @@ class OneClickDeploy {
         };
       } else {
         return {'success': false, 'error': responseData};
-      }
-    } catch (e) {
-      return {'success': false, 'error': e.toString()};
-    }
-  }
-
-  // Deploy to Vercel
-  Future<Map<String, dynamic>> deployToVercel({
-    required String projectId,
-    required String buildDir,
-    String? vercelToken,
-  }) async {
-    if (vercelToken == null) {
-      return {'success': false, 'error': 'Vercel token required'};
-    }
-
-    try {
-      // Vercel deployment API
-      final response = await http.post(
-        Uri.parse('https://api.vercel.com/v13/deployments'),
-        headers: {
-          'Authorization': 'Bearer $vercelToken',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'name': 'kitsune-byte-$projectId',
-          'files': await _getFilesMap(buildDir),
-          'framework': 'flutter',
-        }),
-      );
-
-      final data = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        return {
-          'success': true,
-          'url': data['url'],
-          'id': data['id'],
-        };
-      } else {
-        return {'success': false, 'error': data};
       }
     } catch (e) {
       return {'success': false, 'error': e.toString()};
@@ -138,25 +97,5 @@ class OneClickDeploy {
     final zipPath = '${dirPath}_deploy.zip';
     final result = await Process.run('zip', ['-r', zipPath, '.'], workingDirectory: dirPath);
     return zipPath;
-  }
-
-  // Helper: Get files map for Vercel
-  Future<List<Map<String, dynamic>>> _getFilesMap(String dirPath) async {
-    final files = <Map<String, dynamic>>[];
-    final dir = Directory(dirPath);
-    
-    await for (final entity in dir.list(recursive: true)) {
-      if (entity is File) {
-        final relativePath = path.relative(entity.path, from: dirPath);
-        final content = await entity.readAsBytes();
-        files.add({
-          'file': relativePath,
-          'data': base64Encode(content),
-          'encoding': 'base64',
-        });
-      }
-    }
-    
-    return files;
   }
 }
