@@ -17,7 +17,6 @@ class _DeployScreenState extends State<<DeployScreen> {
   String _selectedPlatform = 'netlify';
 
   final _netlifyTokenController = TextEditingController();
-  final _vercelTokenController = TextEditingController();
   final _siteNameController = TextEditingController();
 
   Future<void> _deploy() async {
@@ -36,13 +35,6 @@ class _DeployScreenState extends State<<DeployScreen> {
           siteName: _siteNameController.text,
           buildDir: '/path/to/build/web',
           netlifyToken: _netlifyTokenController.text,
-        );
-        break;
-      case 'vercel':
-        result = await OneClickDeploy.instance.deployToVercel(
-          projectId: widget.projectId,
-          buildDir: '/path/to/build/web',
-          vercelToken: _vercelTokenController.text,
         );
         break;
       default:
@@ -73,7 +65,6 @@ class _DeployScreenState extends State<<DeployScreen> {
             SegmentedButton<String>(
               segments: [
                 ButtonSegment(value: 'netlify', label: Text('Netlify')),
-                ButtonSegment(value: 'vercel', label: Text('Vercel')),
                 ButtonSegment(value: 'vps', label: Text('VPS')),
               ],
               selected: {_selectedPlatform},
@@ -98,16 +89,6 @@ class _DeployScreenState extends State<<DeployScreen> {
                 decoration: InputDecoration(
                   labelText: 'Netlify Token',
                   hintText: 'np_XXXXXXXXXXXXX',
-                ),
-                obscureText: true,
-              ),
-            ],
-            if (_selectedPlatform == 'vercel') ...[
-              TextField(
-                controller: _vercelTokenController,
-                decoration: InputDecoration(
-                  labelText: 'Vercel Token',
-                  hintText: 'vercel_token_here',
                 ),
                 obscureText: true,
               ),
