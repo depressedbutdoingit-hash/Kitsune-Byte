@@ -1,0 +1,19 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    prefer_const_constructors: false
+    prefer_const_literals_to_create_immutables: false
+    prefer_const_constructors_in_immutables: false
+    use_key_in_widget_constructors: false
+    avoid_print: false
+    # Style nits — fix gradually while the app is still moving fast
+    prefer_interpolation_to_compose_strings: false
+    curly_braces_in_flow_control_structures: false
+    prefer_final_fields: false
+
+analyzer:
+  errors:
+    deprecated_member_use: ignore
+  exclude:
+    - build/**
