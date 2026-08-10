@@ -1,26 +1,52 @@
-name: "CodeQL Android config"
+name: "CodeQL – Android Native"
 
-# Only analyze these paths (recommended for Flutter)
-paths:
-  - android/
-  - '**/android/'          # plugins that ship Android code
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "30 5 * * 1"   # Monday 05:30 UTC
+  workflow_dispatch:
 
-# Explicitly ignore Flutter/Dart and generated noise
-paths-ignore:
-  - '**/*.dart'
-  - '**/*.g.dart'
-  - '**/*.freezed.dart'
-  - '**/build/'
-  - '**/.dart_tool/'
-  - '**/ios/'
-  - '**/macos/'
-  - '**/linux/'
-  - '**/windows/'
-  - '**/web/'
-  - 'docs/'
-  - '**/*.md'
-  - '**/test/'
-  - '**/tests/'
+concurrency:
+  group: codeql-android-${{ github.ref }}
+  cancel-in-progress: true
 
-# queries:
-#   - uses: security-extendedconfig-file: .github/codeql/codeql-config.yml
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+      packages: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: java-kotlin
+            build-mode: none
+          - language: actions
+            build-mode: none
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          dependency-caching: true
+          config-file: .github/codeql/codeql-config.yml
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
