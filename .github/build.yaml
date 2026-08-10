@@ -1,31 +1,26 @@
-name: Build Flutter APK
+name: "CodeQL Android config"
 
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+# Only analyze these paths (recommended for Flutter)
+paths:
+  - android/
+  - '**/android/'          # plugins that ship Android code
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
-      
-      - name: Get dependencies
-        run: flutter pub get
-      
-      - name: Build APK
-        run: flutter build apk --release
-      
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+# Explicitly ignore Flutter/Dart and generated noise
+paths-ignore:
+  - '**/*.dart'
+  - '**/*.g.dart'
+  - '**/*.freezed.dart'
+  - '**/build/'
+  - '**/.dart_tool/'
+  - '**/ios/'
+  - '**/macos/'
+  - '**/linux/'
+  - '**/windows/'
+  - '**/web/'
+  - 'docs/'
+  - '**/*.md'
+  - '**/test/'
+  - '**/tests/'
+
+# queries:
+#   - uses: security-extendedconfig-file: .github/codeql/codeql-config.yml
