@@ -1,0 +1,21 @@
+name: "CodeQL Android config"
+
+paths:
+  - android_native/
+  - '**/android/'
+
+paths-ignore:
+  - '**/*.dart'
+  - '**/*.g.dart'
+  - '**/*.freezed.dart'
+  - '**/build/'
+  - '**/.dart_tool/'
+  - '**/ios/'
+  - '**/macos/'
+  - '**/linux/'
+  - '**/windows/'
+  - '**/web/'
+  - 'docs/'
+  - '**/*.md'
+  - '**/test/'
+  - '**/tests/'
